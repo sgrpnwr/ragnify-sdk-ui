@@ -36,7 +36,7 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-const API_BASE_URL = "http://localhost:9001/sdk";
+const API_BASE_URL = "http://localhost:8000/sdk";
 const apiKey_ENDPOINT = `${API_BASE_URL}/generate-api-key`;
 const logout_ENDPOINT = `${API_BASE_URL}/logout`;
 
