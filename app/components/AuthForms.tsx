@@ -18,7 +18,6 @@ type LoginValues = {
 };
 
 type RegisterValues = {
-  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -39,10 +38,6 @@ const loginSchema = yup
 
 const registerSchema = yup
   .object({
-    username: yup
-      .string()
-      .min(3, "Username must be at least 3 characters")
-      .required("Username is required"),
     email: yup
       .string()
       .email("Enter a valid email")
@@ -183,23 +178,6 @@ export default function AuthForms({ defaultTab = "login", showTabs = true }: Aut
             autoComplete="off"
             onSubmit={registerForm.handleSubmit(handleRegister)}
           >
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="register-username">
-                Username
-              </label>
-              <input
-                id="register-username"
-                type="text"
-                autoComplete="off"
-                className="w-full rounded-xl border border-zinc-200 bg-transparent px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:border-zinc-800 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/20"
-                {...registerForm.register("username")}
-              />
-              {registerForm.formState.errors.username && (
-                <p className="text-xs text-rose-500">
-                  {registerForm.formState.errors.username.message}
-                </p>
-              )}
-            </div>
             <div className="space-y-2">
               <label className="text-sm font-medium" htmlFor="register-email">
                 Email

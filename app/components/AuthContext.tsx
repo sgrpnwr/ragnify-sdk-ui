@@ -15,7 +15,6 @@ type LoginPayload = {
 };
 
 type RegisterPayload = {
-  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -143,7 +142,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: payload.username,
           email: payload.email,
           password: payload.password,
           confirmPassword: payload.confirmPassword,
@@ -163,7 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error("Register response missing access token.");
       }
 
-      handleAuthResponse(token, `Welcome, ${payload.username}! Account created.`);
+  handleAuthResponse(token, "Account created successfully.");
       return true;
     } catch (error) {
       setAuthError(error instanceof Error ? error.message : "Registration failed");
