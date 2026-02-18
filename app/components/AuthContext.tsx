@@ -36,7 +36,7 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-const API_BASE_URL = "http://ragnifyapi.webhop.me/sdk";
+const API_BASE_URL = "https://ragnifyapi.sgrpnwr.com/sdk";
 const apiKey_ENDPOINT = `${API_BASE_URL}/generate-api-key`;
 const logout_ENDPOINT = `${API_BASE_URL}/logout`;
 

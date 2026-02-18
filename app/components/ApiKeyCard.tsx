@@ -98,6 +98,7 @@ export default function ApiKeyCard() {
         <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
           If you already generated it and forgot, go ahead and mint a fresh one —
           consider it a gentle reminder that sticky notes are not a password manager.
+          Your old key will retire gracefully and stop working.
         </p>
       )}
       {authMessage && (
