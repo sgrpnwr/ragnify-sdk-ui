@@ -40,6 +40,41 @@ const API_BASE_URL = "https://ragnifyms.sgrpnwr.com/sdk";
 const apiKey_ENDPOINT = `${API_BASE_URL}/generate-api-key`;
 const logout_ENDPOINT = `${API_BASE_URL}/logout`;
 
+// Utility function to generate a random nonce
+function generateNonce(): string {
+  return Math.random().toString(36).substring(2, 15) +
+         Math.random().toString(36).substring(2, 15);
+}
+
+// Get static headers (Authorization if available)
+function getStaticHeaders(accessToken?: string | null): Record<string, string> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
+  
+  return headers;
+}
+
+// Get dynamic replay headers (timestamp and nonce)
+function getReplayHeaders(): Record<string, string> {
+  return {
+    "x-request-timestamp": Date.now().toString(),
+    "x-request-nonce": generateNonce(),
+  };
+}
+
+// Combine static and dynamic headers
+function getHeaders(accessToken?: string | null): Record<string, string> {
+  return {
+    ...getStaticHeaders(accessToken),
+    ...getReplayHeaders(),
+  };
+}
+
 function getAccessToken(data: unknown) {
   if (typeof data !== "object" || data === null) {
     return null;
@@ -100,9 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const response = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getHeaders(),
         body: JSON.stringify({ email: payload.email, password: payload.password }),
       });
 
@@ -138,9 +171,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const response = await fetch(`${API_BASE_URL}/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getHeaders(),
         body: JSON.stringify({
           email: payload.email,
           password: payload.password,
@@ -161,7 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error("Register response missing access token.");
       }
 
-  handleAuthResponse(token, "Account created successfully.");
+      handleAuthResponse(token, "Account created successfully.");
       return true;
     } catch (error) {
       setAuthError(error instanceof Error ? error.message : "Registration failed");
@@ -183,10 +214,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const response = await fetch(apiKey_ENDPOINT, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
+        headers: getHeaders(accessToken),
       });
 
       const data = await parseJsonResponse(response);
@@ -221,10 +249,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await fetch(logout_ENDPOINT, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
+        headers: getHeaders(accessToken),
       });
     } finally {
       clearAuthState();
